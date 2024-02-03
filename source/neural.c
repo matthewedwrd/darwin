@@ -1,49 +1,52 @@
+#include <math.h>
+
 #include <darwin/neural.h>
 #include <darwin/matrix.h>
 
-void fnn_create(fnn_t *fnn, int input_nodes, int hidden_nodes, int output_nodes)
+void softmax(matrix_t *matrix)
 {
-	fnn->weights_input_hidden.rows = hidden_nodes;
-	fnn->weights_input_hidden.columns = input_nodes;
-	matrix_create(&fnn->weights_input_hidden);
-	matrix_random(&fnn->weights_input_hidden);
+	for(int i = 0; i < matrix->rows; i++)
+	{
+		float sum = 0.0f;
 
-	fnn->weights_hidden_output.rows = output_nodes;
-	fnn->weights_hidden_output.columns = hidden_nodes;
-	matrix_create(&fnn->weights_hidden_output);
-	matrix_random(&fnn->weights_hidden_output);
+		for (int j = 0; j < matrix->columns; j++)
+		{
+			matrix->data[i][j] = exp(matrix->data[i][j]);
+			sum += matrix->data[i][j];
+		}
 
-	fnn->bias_hidden.rows = hidden_nodes;
-	fnn->bias_hidden.columns = 1;
-	matrix_create(&fnn->bias_hidden);
-	matrix_random(&fnn->bias_hidden);
-
-	fnn->bias_output.rows = output_nodes;
-	fnn->bias_output.columns = 1;
-	matrix_create(&fnn->bias_output);
-	matrix_random(&fnn->bias_output);
+		for (int j = 0; j < matrix->columns; j++)
+		{
+			matrix->data[i][j] /= sum;
+		}
+	}
 }
 
-void fnn_forward(fnn_t *fnn, matrix_t *input, matrix_t *output)
+int self_attention(matrix_t *output, matrix_t *query, matrix_t *key, matrix_t *value)
 {
-	matrix_t hidden;
-	hidden.rows = fnn->weights_input_hidden.rows;
-	hidden.columns = 1;
-	matrix_create(&hidden);
+	matrix_t temp;
+	temp.rows = query->rows;
+	temp.columns = key->columns;
 
-	matrix_multiply(&hidden, &fnn->weights_input_hidden, input);
-	matrix_add(&hidden, &hidden, &fnn->bias_hidden);
+	if(matrix_create(&temp) != 0)
+	{
+		return -1;
+	}
 
-	matrix_multiply(output, &fnn->weights_hidden_output, &hidden);
-	matrix_add(output, output, &fnn->bias_output);
+	if(matrix_multiply(&temp, query, key) != 0)
+	{
+		matrix_delete(&temp);
+		return -1;
+	}
 
-	matrix_delete(&hidden);
-}
+	softmax(&temp);
 
-void fnn_delete(fnn_t *fnn)
-{
-	matrix_delete(&fnn->weights_input_hidden);
-	matrix_delete(&fnn->weights_hidden_output);
-	matrix_delete(&fnn->bias_hidden);
-	matrix_delete(&fnn->bias_output);
+	if(matrix_multiply(output, &temp, value) != 0)
+	{
+		matrix_delete(&temp);
+		return -1;
+	}
+
+	matrix_delete(&temp);
+	return 0;
 }

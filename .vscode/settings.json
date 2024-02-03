@@ -9,6 +9,7 @@
 	"editor.renderWhitespace": "boundary",
 	"editor.renderControlCharacters": true,
 	"files.associations": {
-		"neural.h": "c"
+		"neural.h": "c",
+		"matrix.h": "c"
 	}
 }
