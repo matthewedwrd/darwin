@@ -4,47 +4,42 @@
 #include <darwin/matrix.h>
 #include <darwin/endl.h>
 #include <darwin/seed.h>
+#include <darwin/neural.h>
 
 int main()
 {
 	g_seed = time(NULL);
 
-	matrix_t matrix0, matrix1, matrix2;
+	int input_nodes = 2;
+	int hidden_nodes = 2;
+	int output_nodes = 2;
 
-	matrix0.rows = 2;
-	matrix1.rows = 2;
-	matrix2.rows = 2;
+	fnn_t my_fnn;
 
-	matrix0.columns = 2;
-	matrix1.columns = 2;
-	matrix2.columns = 2;
+	fnn_create(&my_fnn, input_nodes, hidden_nodes, output_nodes);
 
-	matrix_create(&matrix0);
-	matrix_create(&matrix1);
-	matrix_create(&matrix2);
+	matrix_t input;
+	input.rows = input_nodes;
+	input.columns = 1;
+	matrix_create(&input);
+	matrix_random(&input);
 
-	matrix_random(&matrix0);
-	matrix_random(&matrix1);
+	printf("INPUT:" ENDL);
+	matrix_print(&input);
 
-	printf("MATRIX 1:" ENDL);
-	matrix_print(&matrix0);
+	matrix_t output;
+	output.rows = output_nodes;
+	output.columns = 1;
+	matrix_create(&output);
 
-	printf("MATRIX 2:" ENDL);
-	matrix_print(&matrix1);
+	fnn_forward(&my_fnn, &input, &output);
 
-	matrix_add(&matrix2, &matrix0, &matrix1);
+	printf("OUTPUT AFTER FORWARD PASS:" ENDL);
+	matrix_print(&output);
 
-	printf("RESULT OF ADDING MATRIX 1 AND MATRIX 2:" ENDL);
-	matrix_print(&matrix2);
-
-	matrix_multiply(&matrix2, &matrix0, &matrix1);
-
-	printf("RESULT OF MULTIPLYING MATRIX 1 AND MATRIX 2:" ENDL);
-	matrix_print(&matrix2);
-
-	matrix_random(&matrix2);
-	matrix_delete(&matrix1);
-	matrix_delete(&matrix0);
+	matrix_delete(&input);
+	matrix_delete(&output);
+	fnn_delete(&my_fnn);
 
 	return 0;
 }
