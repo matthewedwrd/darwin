@@ -10,6 +10,10 @@
 	"editor.renderControlCharacters": true,
 	"files.associations": {
 		"neural.h": "c",
-		"matrix.h": "c"
+		"matrix.h": "c",
+		"vector.h": "c",
+		"stddef.h": "c",
+		"endl.h": "c",
+		"transformer.h": "c"
 	}
 }
