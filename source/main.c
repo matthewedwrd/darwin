@@ -2,13 +2,13 @@
 
 int main()
 {
-	matrix_t matrix;
+	matrix_t l_matrix;
 
-	matrix_create(&matrix, 2, 2);
-	matrix.data[0][0] = 1.0f;
-	matrix.data[0][1] = 1.0f;
-	matrix.data[1][0] = 1.0f;
-	matrix.data[1][1] = 1.0f;
+	matrix_create(&l_matrix, 2, 2);
+	l_matrix.data[0][0] = 1.0f;
+	l_matrix.data[0][1] = 1.0f;
+	l_matrix.data[1][0] = 1.0f;
+	l_matrix.data[1][1] = 1.0f;
 
 	return 0;
 }

@@ -18,20 +18,23 @@ int matrix_create(matrix_t *matrix, int width, int height)
 		matrix->data[i] = (float *)(matrix->data + height) + i * width;
 	}
 
+	matrix->rows = width;
+	matrix->cols = height;
+
 	return 0;
 }
 
 int matrix_resize(matrix_t *matrix, int width, int height)
 {
-	float **data = malloc((height * sizeof(float *)) + (height * width * sizeof(float)));
-	if(data == NULL)
+	float **l_data = malloc((height * sizeof(float *)) + (height * width * sizeof(float)));
+	if(l_data == NULL)
 	{
 		return -1;
 	}
 
 	for(int i = 0; i < height; i++)
 	{
-		data[i] = (float *)(data + height) + i * width;
+		l_data[i] = (float *)(l_data + height) + i * width;
 	}
 
 	int min_rows = height < matrix->rows ? height : matrix->rows;
@@ -41,13 +44,13 @@ int matrix_resize(matrix_t *matrix, int width, int height)
 	{
 		for(int j = 0; j < min_cols; j++)
 		{
-			data[i][j] = matrix->data[i][j];
+			l_data[i][j] = matrix->data[i][j];
 		}
 	}
 
 	free(matrix->data);
 
-	matrix->data = data;
+	matrix->data = l_data;
 	matrix->rows = height;
 	matrix->cols = width;
 
@@ -56,6 +59,8 @@ int matrix_resize(matrix_t *matrix, int width, int height)
 
 int matrix_delete(matrix_t *matrix)
 {
+	matrix->rows = 0;
+	matrix->cols = 0;
 	free(matrix->data);
 
 	return 0;
