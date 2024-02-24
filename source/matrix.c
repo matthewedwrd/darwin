@@ -5,24 +5,28 @@
 #include <darwin/matrix.h>
 #include <darwin/endl.h>
 
-int matrix_create(matrix_t *matrix, int width, int height)
+int matrix_create(matrix_t* matrix, int width, int height)
 {
-	matrix->data = malloc((height * sizeof(float *)) + (height * width * sizeof(float)));
-	if(matrix->data == NULL)
+	size_t row_pointers_size = height * sizeof(float*);
+	size_t data_size = height * width * sizeof(float);
+
+	matrix->data = malloc(row_pointers_size + data_size);
+	if (matrix->data == NULL)
 	{
 		return -1;
 	}
 
-	for(int i = 0; i < height; i++)
+	for (int i = 0; i < height; i++)
 	{
-		matrix->data[i] = (float *)(matrix->data + height) + i * width;
+		matrix->data[i] = (float*)((char*)matrix->data + row_pointers_size) + i * width;
 	}
 
-	matrix->rows = width;
-	matrix->cols = height;
+	matrix->rows = height;
+	matrix->cols = width;
 
 	return 0;
 }
+
 
 int matrix_resize(matrix_t *matrix, int width, int height)
 {

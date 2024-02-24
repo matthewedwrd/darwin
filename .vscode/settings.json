@@ -14,6 +14,8 @@
 		"vector.h": "c",
 		"stddef.h": "c",
 		"endl.h": "c",
-		"transformer.h": "c"
+		"transformer.h": "c",
+		"indexops.h": "c",
+		"function.h": "c"
 	}
 }
