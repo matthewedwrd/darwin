@@ -69,3 +69,35 @@ int matrix_delete(matrix_t *matrix)
 
 	return 0;
 }
+
+int matrix_clear(matrix_t *matrix)
+{
+	for(int i = 0; i < matrix->rows; i++)
+	{
+		for(int j = 0; j < matrix->cols; j++)
+		{
+			matrix->data[i][j] = 0.0f;
+		}
+	}
+
+	return 0;
+}
+
+int matrix_print(matrix_t *matrix)
+{
+	for(int i = 0; i < matrix->rows; i++)
+	{
+		printf("[");
+		for(int j = 0; j < matrix->cols; j++)
+		{
+			printf("%.2f", matrix->data[i][j]);
+			if(j != matrix->cols - 1)
+			{
+				printf(", ");
+			}
+		}
+		printf("]" ENDL);
+	}
+
+	return 0;
+}

@@ -5,30 +5,18 @@
 #include <darwin/function.h>
 #include <darwin/endl.h>
 
+
 int main()
 {
-	vector_t vector0, vector1;
-	vector_create(&vector0, 7);
-	vector_create(&vector1, 0);
+	matrix_t matrix;
 
-	vector0.data[0] = 1.0f;
-	vector0.data[1] = 2.0f;
-	vector0.data[2] = 3.0f;
-	vector0.data[3] = 4.0f;
-	vector0.data[4] = 1.0;;
-	vector0.data[5] = 2.0f;
-	vector0.data[6] = 3.0f;
+	matrix_create(&matrix, 8, 8);
 
-	softmax(&vector0, &vector1);
+	matrix_clear(&matrix);
 
-	for(int i = 0; i < vector1.size; i++)
-	{
-		printf("%.3f ", vector1.data[i]);
-	}
-	printf(ENDL);
+	matrix_print(&matrix);
 
-	vector_delete(&vector0);
-	vector_delete(&vector1);
+	matrix_delete(&matrix);
 
 	return 0;
 }
